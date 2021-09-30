@@ -25,10 +25,9 @@ namespace app
             db.AddRoom(14, 0, 0, 15, 13, false, 0, 0);
             db.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
             db.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
-
             db.SaveChanges();
 
-            // var game = new Game(db);
+            var game = new Game(db);
 
         }
     }

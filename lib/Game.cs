@@ -13,6 +13,7 @@ namespace lib
         public int TurnLimit;
         public PlayerCharacter Player;
         public Minotaur Minotaur;
+        public int CurrentRoom;
         public Game(Database database)
         {
             this._db = database;
@@ -22,7 +23,19 @@ namespace lib
             this.TurnLimit = 25;
             this.Player = new();
             this.Minotaur = new();
+            this.CurrentRoom = 16;
         }
+
+
+        //list of actions
+        public void viewRoom()
+        {
+            Console.WriteLine($"You are in room {this.CurrentRoom}");
+        }
+        //move rooms
+        //fight
+        //sneak
+        //acquire treasure
 
 
     }
