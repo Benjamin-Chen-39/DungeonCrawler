@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "dotnet-ef": {
+      "version": "5.0.10",
+      "commands": [
+        "dotnet-ef"
+      ]
+    },
+    "dotnetsay": {
+      "version": "2.1.7",
+      "commands": [
+        "dotnetsay"
+      ]
+    }
+  }
+}
