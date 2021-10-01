@@ -41,7 +41,7 @@ namespace lib
             if (MonsterId != 0)
                 Monsters.Add(new Monster { Id = MonsterId, Health = 10, Attack = 3, Defense = 1, Name = "Goblin" });
             if (TreasureId != 0)
-                Treasures.Add(new Treasure { Id = TreasureId, BonusStat = 2 });
+                Treasures.Add(new Treasure { Id = TreasureId, BonusStat = 1 });
         }
         //list of actions
         public void viewRoom()
@@ -52,13 +52,13 @@ namespace lib
             if (roomMonster != 0)
             {
                 CurrentMonster = _db.Monsters.Where(monster => monster.Id == roomMonster).First();
-                Console.Write($"You see a {CurrentMonster.Name}. ");
+                Console.Write($"There is a {CurrentMonster.Name}. ");
             }
             int roomTreasure = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First().TreasureId;
             if (roomTreasure != 0)
             {
                 CurrentTreasure = _db.Treasures.Where(treasure => treasure.Id == roomTreasure).First();
-                Console.Write("You see a treasure.");
+                Console.Write("There is a treasure.");
             }
 
             Console.WriteLine();
@@ -114,6 +114,12 @@ namespace lib
         //Fight monster
         public void AttackMonster()
         {
+            if (CurrentMonster.Id != 0 && CurrentMonster.IsDead == true)
+            {
+                Console.WriteLine("This monster is already dead.");
+                return;
+            }
+
             if (CurrentMonster.Id != 0 && CurrentMonster.IsDead == false)
             {    //player attacks current monster
                 int damage = Player.Attack - CurrentMonster.Defense;
@@ -130,7 +136,7 @@ namespace lib
                 }
             }
         }
-
+        //Monster attacks you
         public void MonsterAttack()
         {
             //monster attacks player
@@ -150,5 +156,132 @@ namespace lib
             }
         }
 
+        //Open treasure
+        public void OpenTreasure()
+        {
+            switch (CurrentTreasure.IsOpened)
+            {
+                case true:
+                    Console.WriteLine("You already opened this treasure.");
+                    break;
+
+                case false:
+                    Console.WriteLine("You opened the treasure and got a piece of armor, increasing your defense by one point!");
+                    CurrentTreasure.IsOpened = true;
+                    Player.Defense += 1;
+                    break;
+            }
+        }
+
+        //Look around
+        public void Look()
+        {
+            CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
+            Room nextRoom;
+            Monster nextMonster;
+            Treasure nextTreasure;
+            if (CurrentRoom.NorthRoomId != 0)
+            {
+                nextRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoom.NorthRoomId).First();
+                if (nextRoom.MonsterId != 0)
+                {
+                    nextMonster = _db.Monsters.Where(monster => monster.Id == nextRoom.MonsterId).First();
+                    Console.WriteLine($"You see a {nextMonster.Name} in the north room.");
+                }
+                if (nextRoom.TreasureId != 0)
+                {
+                    nextTreasure = _db.Treasures.Where(treasure => treasure.Id == nextRoom.TreasureId).First();
+                    Console.WriteLine("You see a treasure in the north room.");
+                }
+            }
+
+            if (CurrentRoom.SouthRoomId != 0)
+            {
+                nextRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoom.SouthRoomId).First();
+                if (nextRoom.MonsterId != 0)
+                {
+                    nextMonster = _db.Monsters.Where(monster => monster.Id == nextRoom.MonsterId).First();
+                    Console.WriteLine($"You see a {nextMonster.Name} in the south room.");
+                }
+                if (nextRoom.TreasureId != 0)
+                {
+                    nextTreasure = _db.Treasures.Where(treasure => treasure.Id == nextRoom.TreasureId).First();
+                    Console.WriteLine("You see a treasure in the south room.");
+                }
+            }
+            if (CurrentRoom.WestRoomId != 0)
+            {
+                nextRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoom.WestRoomId).First();
+                if (nextRoom.MonsterId != 0)
+                {
+                    nextMonster = _db.Monsters.Where(monster => monster.Id == nextRoom.MonsterId).First();
+                    Console.WriteLine($"You see a {nextMonster.Name} in the west room.");
+                }
+                if (nextRoom.TreasureId != 0)
+                {
+                    nextTreasure = _db.Treasures.Where(treasure => treasure.Id == nextRoom.TreasureId).First();
+                    Console.WriteLine("You see a treasure in the west room.");
+                }
+            }
+            if (CurrentRoom.EastRoomId != 0)
+            {
+                nextRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoom.EastRoomId).First();
+                if (nextRoom.MonsterId != 0)
+                {
+                    nextMonster = _db.Monsters.Where(monster => monster.Id == nextRoom.MonsterId).First();
+                    Console.WriteLine($"You see a {nextMonster.Name} in the east room.");
+                }
+                if (nextRoom.TreasureId != 0)
+                {
+                    nextTreasure = _db.Treasures.Where(treasure => treasure.Id == nextRoom.TreasureId).First();
+                    Console.WriteLine("You see a treasure in the east room.");
+                }
+            }
+        }
+
+        public void Rest()
+        {
+            Console.WriteLine("You rest for one turn and regain 3 Health.");
+            Player.Health += 3;
+            if (Player.Health > 20)
+                Player.Health = 20;
+        }
+
+        public void FightMinotaur()
+        {
+            while (Player.Health > 0 && Minotaur.Health > 0)
+            {
+                //player attacks
+                int damage = Player.Attack - Minotaur.Defense;
+                if (damage < 0)
+                    damage = 0;
+                Console.WriteLine($"You strike the minotaur for {damage} damage");
+                Minotaur.Health -= damage;
+                if (Minotaur.Health <= 0)
+                {
+                    Console.WriteLine("You have felled the mighty beast. Congratulations on your victory!");
+                    IsRunning = false;
+                    return;
+                }
+
+                else //Minotaur is still alive
+                {
+                    Console.WriteLine($"The minotaur has {Minotaur.Health} health points left.");
+                }
+
+                //minotaur attacks
+                damage = Minotaur.Attack - Player.Defense;
+                if (damage < 0)
+                    damage = 0;
+                Console.WriteLine($"The Minotaur hits you for {damage} damage.");
+                Player.Health -= damage;
+                if (Player.Health <= 0)
+                {
+                    Console.WriteLine("You have died. Game over.");
+                    IsRunning = false;
+                    return;
+                }
+            }
+        }
     }
 }

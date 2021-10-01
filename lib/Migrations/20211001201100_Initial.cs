@@ -48,7 +48,8 @@ namespace lib.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BonusStat = table.Column<int>(type: "INTEGER", nullable: false)
+                    BonusStat = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsOpened = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

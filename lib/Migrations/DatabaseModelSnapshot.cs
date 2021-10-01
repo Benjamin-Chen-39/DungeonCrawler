@@ -82,6 +82,9 @@ namespace lib.Migrations
                     b.Property<int>("BonusStat")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsOpened")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Treasures");

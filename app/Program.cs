@@ -10,41 +10,41 @@ namespace app
             //create and intialize database
             using var db = new Database();
 
-            var game = new Game(db, 3);
+            var game = new Game(db, 16);
 
-            game.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
-            game.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
-            game.AddRoom(3, 0, 7, 4, 2, false, 2, 0);
-            game.AddRoom(4, 0, 8, 0, 3, false, 0, 0);
-            game.AddRoom(5, 0, 9, 0, 0, false, 3, 1);
-            game.AddRoom(6, 0, 10, 7, 0, false, 0, 2);
-            game.AddRoom(7, 3, 11, 8, 6, false, 0, 0);
-            game.AddRoom(8, 4, 0, 0, 7, false, 4, 0);
-            game.AddRoom(9, 5, 13, 10, 0, false, 0, 0);
-            game.AddRoom(10, 6, 0, 11, 9, false, 0, 0);
-            game.AddRoom(11, 7, 0, 0, 10, false, 0, 3);
-            game.AddRoom(12, 0, 16, 0, 0, false, 0, 4);
-            game.AddRoom(13, 9, 0, 14, 0, false, 0, 5);
-            game.AddRoom(14, 0, 0, 15, 13, false, 0, 0);
-            game.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
-            game.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
+            // game.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
+            // game.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
+            // game.AddRoom(3, 0, 7, 4, 2, false, 2, 0);
+            // game.AddRoom(4, 0, 8, 0, 3, false, 0, 0);
+            // game.AddRoom(5, 0, 9, 0, 0, false, 3, 1);
+            // game.AddRoom(6, 0, 10, 7, 0, false, 0, 2);
+            // game.AddRoom(7, 3, 11, 8, 6, false, 0, 0);
+            // game.AddRoom(8, 4, 0, 0, 7, false, 4, 0);
+            // game.AddRoom(9, 5, 13, 10, 0, false, 0, 0);
+            // game.AddRoom(10, 6, 0, 11, 9, false, 0, 0);
+            // game.AddRoom(11, 7, 0, 0, 10, false, 0, 3);
+            // game.AddRoom(12, 0, 16, 0, 0, false, 0, 4);
+            // game.AddRoom(13, 9, 0, 14, 0, false, 0, 5);
+            // game.AddRoom(14, 0, 0, 15, 13, false, 0, 0);
+            // game.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
+            // game.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
 
-            foreach (Room room in game.Rooms)
-            {
-                db.Rooms.Add(room);
-            }
+            // foreach (Room room in game.Rooms)
+            // {
+            //     db.Rooms.Add(room);
+            // }
 
-            foreach (Monster monster in game.Monsters)
-            {
-                db.Monsters.Add(monster);
-            }
+            // foreach (Monster monster in game.Monsters)
+            // {
+            //     db.Monsters.Add(monster);
+            // }
 
-            foreach (Treasure treasure in game.Treasures)
-            {
-                db.Treasures.Add(treasure);
-            }
+            // foreach (Treasure treasure in game.Treasures)
+            // {
+            //     db.Treasures.Add(treasure);
+            // }
 
-            // db.SaveChanges();
+            // // db.SaveChanges();
 
             bool validRoomMove = true;
 
@@ -72,7 +72,7 @@ namespace app
                 Console.Write("> ");
 
                 var input = Console.ReadLine().ToLower();
-                //var splitInput = input.Split(" ");
+                Console.WriteLine();
 
                 switch (input)
                 {
@@ -95,13 +95,14 @@ namespace app
                         game.AttackMonster();
                         break;
                     case "open":
-                        // game.OpenTreasure();
+                        game.OpenTreasure();
                         break;
                     case "look":
-                        // game.Look();
+                        game.Look();
                         break;
                     case "rest":
-                    // game.Rest();
+                        game.Rest();
+                        break;
                     default:
                         break;
                 }
@@ -112,10 +113,17 @@ namespace app
                 //if there's a live monster, it will attack you
                 if (game.CurrentMonster.Id != 0 && !game.CurrentMonster.IsDead)
                     game.MonsterAttack();
-                //end of turn
+
+                //end of turn, database of monsters/treasures should get updated
+                db.SaveChanges();
                 game.TurnLimit -= 1;
 
-                //Minotaur fight if you didn't find the exit
+                //Trigger minotaur fight if you didn't find the exit
+                if (game.TurnLimit == 0)
+                {
+                    Console.WriteLine("The minotaur catches up to you and teleports you both to an arena. The exit lies behind him. Kill him and win your freedom!");
+                    game.FightMinotaur();
+                }
             }
         }
     }

@@ -8,5 +8,11 @@ namespace lib
         [Key]
         public int Id { get; set; }
         public int BonusStat { get; set; }
+        public bool IsOpened { get; set; }
+
+        public Treasure()
+        {
+            IsOpened = false;
+        }
     }
 }

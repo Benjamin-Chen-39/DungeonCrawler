@@ -8,7 +8,7 @@ using lib;
 namespace lib.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20211001192800_Initial")]
+    [Migration("20211001201100_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,9 @@ namespace lib.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("BonusStat")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsOpened")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
