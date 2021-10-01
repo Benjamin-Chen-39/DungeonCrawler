@@ -97,7 +97,7 @@ namespace test
                 ctx.Rooms.Add(room);
             }
 
-            _testGame.CurrentRoom.Should().Be(16);
+            _testGame.CurrentRoomId.Should().Be(16);
             _testGame.Rooms.Count().Should().Be(16);
         }
 
@@ -108,13 +108,47 @@ namespace test
             ctx.Database.EnsureDeleted();
             ctx.Database.EnsureCreated();
 
+            _testGame = new Game(ctx, 16);
+            _testGame.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
+            _testGame.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
+            _testGame.AddRoom(3, 0, 7, 4, 2, false, 2, 0);
+            _testGame.AddRoom(4, 0, 8, 0, 3, false, 0, 0);
+            _testGame.AddRoom(5, 0, 9, 0, 0, false, 3, 1);
+            _testGame.AddRoom(6, 0, 10, 7, 0, false, 0, 2);
+            _testGame.AddRoom(7, 3, 11, 8, 6, false, 0, 0);
+            _testGame.AddRoom(8, 4, 0, 0, 7, false, 4, 0);
+            _testGame.AddRoom(9, 5, 13, 10, 0, false, 0, 0);
+            _testGame.AddRoom(10, 6, 0, 11, 9, false, 0, 0);
+            _testGame.AddRoom(11, 7, 0, 0, 10, false, 0, 3);
+            _testGame.AddRoom(12, 0, 16, 0, 0, false, 0, 4);
+            _testGame.AddRoom(13, 9, 0, 14, 0, false, 0, 5);
+            _testGame.AddRoom(14, 0, 0, 15, 13, false, 0, 0);
             _testGame.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
             _testGame.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
+            
+            foreach (Room room in _testGame.Rooms)
+            {
+                ctx.Rooms.Add(room);
+            }
+
+            foreach (Monster monster in _testGame.Monsters)
+            {
+                ctx.Monsters.Add(monster);
+            }
+
+            foreach (Treasure treasure in _testGame.Treasures)
+            {
+                ctx.Treasures.Add(treasure);
+            }
+
             ctx.SaveChanges();
 
-            _testGame.Move("west");
-            _testGame.CurrentRoom.Id.Should().Be(15);
-
+            _testGame.viewRoom();
+            _testGame.CurrentRoomId.Should().Be(16);
+            _testGame.CurrentRoom.WestRoomId.Should().Be(15);
+            _testGame.Move("west").Should().Be(true);
+            _testGame.viewRoom();
+            _testGame.CurrentRoomId.Should().Be(15);
         }
     }
 }

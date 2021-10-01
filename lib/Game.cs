@@ -63,7 +63,8 @@ namespace lib
 
             Console.WriteLine();
 
-            CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
+            // CurrentRoomId = CurrentRoom.Id;
+            // CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
 
             if (CurrentRoom.NorthRoomId != 0)
             {
@@ -103,7 +104,9 @@ namespace lib
                         Console.WriteLine("Congratulations! You found the exit!");
                         IsRunning = false;
                     }
+
                     if (CurrentRoom.WestRoomId != 0) { this.CurrentRoomId = CurrentRoom.WestRoomId; return true; } else { Console.WriteLine("You walk into the wall."); }
+                    
                     break;
                 default:
                     break;
