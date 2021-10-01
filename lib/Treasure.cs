@@ -8,6 +8,5 @@ namespace lib
         [Key]
         public int Id { get; set; }
         public int BonusStat { get; set; }
-
     }
 }

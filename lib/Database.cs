@@ -9,14 +9,14 @@ namespace lib
         public DbSet<Monster> Monsters { get; set; }
         public DbSet<Treasure> Treasures { get; set; }
 
-        public void AddRoom(int Id, int NorthRoomId, int SouthRoomId, int EastRoomId, int WestRoomId, bool isEscapeRoom, int MonsterId, int TreasureId)
-        {
-            Rooms.Add(new Room { Id = Id, NorthRoomId = NorthRoomId, SouthRoomId = SouthRoomId, EastRoomId = EastRoomId, WestRoomId = WestRoomId, isEscapeRoom = isEscapeRoom, MonsterId = MonsterId, TreasureId = TreasureId });
-            if (MonsterId != 0)
-                Monsters.Add(new Monster { Id = MonsterId, Health = 10, Attack = 3, Defense = 1, Name = "Goblin" });
-            if (TreasureId != 0)
-                Treasures.Add(new Treasure { Id = TreasureId, BonusStat = 2 });
-        }
+        // public void AddRoom(int Id, int NorthRoomId, int SouthRoomId, int EastRoomId, int WestRoomId, bool isEscapeRoom, int MonsterId, int TreasureId)
+        // {
+        //     Rooms.Add(new Room { Id = Id, NorthRoomId = NorthRoomId, SouthRoomId = SouthRoomId, EastRoomId = EastRoomId, WestRoomId = WestRoomId, isEscapeRoom = isEscapeRoom, MonsterId = MonsterId, TreasureId = TreasureId });
+        //     if (MonsterId != 0)
+        //         Monsters.Add(new Monster { Id = MonsterId, Health = 10, Attack = 3, Defense = 1, Name = "Goblin" });
+        //     if (TreasureId != 0)
+        //         Treasures.Add(new Treasure { Id = TreasureId, BonusStat = 2 });
+        // }
 
         public Database() : base() { }
         public Database(DbContextOptions<Database> options) : base(options) { }
