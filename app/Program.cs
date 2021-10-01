@@ -10,7 +10,7 @@ namespace app
             //create and intialize database
             using var db = new Database();
             
-            var game = new Game(db, 16);
+            var game = new Game(db, 5);
 
             game.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
             game.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
@@ -44,7 +44,8 @@ namespace app
                 db.Treasures.Add(treasure);
             }
 
-            db.SaveChanges();
+            // db.SaveChanges();
+            game.viewRoom();
 
         }
     }
