@@ -122,6 +122,8 @@ namespace app
                 if (game.TurnLimit == 0)
                 {
                     Console.WriteLine("The minotaur catches up to you and teleports you both to an arena. The exit lies behind him. Kill him and win your freedom!");
+                    Console.WriteLine("Here are your current stats: ");
+                    Console.WriteLine($"Health:{game.Player.Health}\nAttack: {game.Player.Attack}\nDefense: {game.Player.Defense}");
                     game.FightMinotaur();
                 }
             }
