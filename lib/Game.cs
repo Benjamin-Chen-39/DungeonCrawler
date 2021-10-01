@@ -7,9 +7,9 @@ namespace lib
     public class Game
     {
         private Database _db;
-        public List<Room> Rooms;
-        public List<Monster> Monsters;
-        public List<Treasure> Treasures;
+        public List<Room> Rooms {get; set;}
+        public List<Monster> Monsters {get; set;}
+        public List<Treasure> Treasures{get; set;}
         public int TurnLimit;
         public PlayerCharacter Player;
         public Minotaur Minotaur;

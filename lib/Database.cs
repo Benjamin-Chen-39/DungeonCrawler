@@ -1,13 +1,16 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Logging;
 namespace lib
 {
     public class Database : DbContext
     {
+    
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Monster> Monsters { get; set; }
-        public DbSet<Treasure> Treasures { get; set; }
+        public DbSet<Treasure> Treasures { get; set; }  
+        
+
 
         // public void AddRoom(int Id, int NorthRoomId, int SouthRoomId, int EastRoomId, int WestRoomId, bool isEscapeRoom, int MonsterId, int TreasureId)
         // {
