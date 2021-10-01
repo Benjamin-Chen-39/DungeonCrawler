@@ -11,6 +11,12 @@ namespace lib
         public int Attack { get; set; }
         public int Defense { get; set; }
         public string Name { get; set; }
+        public bool IsDead { get; set; }
+
+        public Monster()
+        {
+            this.IsDead = false;
+        }
 
     }
 }

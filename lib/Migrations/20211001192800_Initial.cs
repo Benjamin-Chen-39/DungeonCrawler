@@ -15,7 +15,8 @@ namespace lib.Migrations
                     Health = table.Column<int>(type: "INTEGER", nullable: false),
                     Attack = table.Column<int>(type: "INTEGER", nullable: false),
                     Defense = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    IsDead = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -17,6 +17,7 @@ namespace lib
         public Room CurrentRoom;
         public Monster CurrentMonster;
         public Treasure CurrentTreasure;
+        public bool IsRunning;
 
         public Game(Database database, int startRoom)
         {
@@ -25,9 +26,13 @@ namespace lib
             this.Monsters = new();
             this.Treasures = new();
             this.TurnLimit = 25;
-            this.Player = new();
+            this.Player = new PlayerCharacter() { Health = 20, Attack = 5, Defense = 2 };
             this.Minotaur = new();
             this.CurrentRoomId = startRoom;
+            this.CurrentRoom = new();
+            this.CurrentMonster = new();
+            this.CurrentTreasure = new();
+            this.IsRunning = true;
         }
 
         public void AddRoom(int Id, int NorthRoomId, int SouthRoomId, int EastRoomId, int WestRoomId, bool isEscapeRoom, int MonsterId, int TreasureId)
@@ -42,7 +47,7 @@ namespace lib
         public void viewRoom()
         {
             CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
-            Console.Write($"You are in room {this.CurrentRoomId}. ");
+            Console.Write($"\nYou are in room {this.CurrentRoomId}. ");
             int roomMonster = CurrentRoom.MonsterId;
             if (roomMonster != 0)
             {
@@ -77,36 +82,73 @@ namespace lib
                 Console.WriteLine("There is a room to the east.");
             }
         }
-        // //move rooms
-        // public void MoveRoom()
 
-        //fight
-        //sneak
-        //acquire treasure
-
+        //Move function
         public bool Move(string direction)
         {
-            CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
-
             switch (direction)
             {
                 case "north":
-                    if (CurrentRoom.NorthRoomId != 0) { this.CurrentRoomId = CurrentRoom.NorthRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    if (CurrentRoom.NorthRoomId != 0) { this.CurrentRoomId = CurrentRoom.NorthRoomId; return true; } else { Console.WriteLine("You walk into the wall."); }
                     break;
                 case "south":
-                    if (CurrentRoom.SouthRoomId != 0) { this.CurrentRoomId = CurrentRoom.SouthRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    if (CurrentRoom.SouthRoomId != 0) { this.CurrentRoomId = CurrentRoom.SouthRoomId; return true; } else { Console.WriteLine("You walk into the wall."); }
                     break;
                 case "east":
-                    if (CurrentRoom.EastRoomId != 0) { this.CurrentRoomId = CurrentRoom.EastRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    if (CurrentRoom.EastRoomId != 0) { this.CurrentRoomId = CurrentRoom.EastRoomId; return true; } else { Console.WriteLine("You walk into the wall."); }
                     break;
                 case "west":
-                    if (CurrentRoom.WestRoomId != 0) { this.CurrentRoomId = CurrentRoom.WestRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    if (CurrentRoom.WestRoomId == 1)
+                    {
+                        Console.WriteLine("Congratulations! You found the exit!");
+                        IsRunning = false;
+                    }
+                    if (CurrentRoom.WestRoomId != 0) { this.CurrentRoomId = CurrentRoom.WestRoomId; return true; } else { Console.WriteLine("You walk into the wall."); }
                     break;
                 default:
                     break;
             }
-
             return false;
         }
+
+        //Fight monster
+        public void AttackMonster()
+        {
+            if (CurrentMonster.Id != 0 && CurrentMonster.IsDead == false)
+            {    //player attacks current monster
+                int damage = Player.Attack - CurrentMonster.Defense;
+                if (damage < 0)
+                    damage = 0;
+                CurrentMonster.Health -= damage;
+                Console.WriteLine($"You attack the monster, dealing {damage} damage!");
+
+                if (CurrentMonster.Health <= 0)
+                {
+                    Console.WriteLine("You killed the monster and gained one attack point.");
+                    Player.Attack += 1;
+                    CurrentMonster.IsDead = true;
+                }
+            }
+        }
+
+        public void MonsterAttack()
+        {
+            //monster attacks player
+            int damage = CurrentMonster.Attack - Player.Defense;
+            if (damage < 0)
+                damage = 0;
+            Player.Health -= damage;
+            Console.WriteLine($"{CurrentMonster.Name} attacks you, dealing {damage} damage.");
+            if (Player.Health <= 0)
+            {
+                Console.WriteLine("The monster killed you! Game over.");
+                IsRunning = false;
+            }
+            else
+            {
+                Console.WriteLine($"You have {Player.Health} health points.");
+            }
+        }
+
     }
 }

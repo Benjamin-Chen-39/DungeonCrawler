@@ -92,13 +92,28 @@ namespace test
             _testGame.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
             ctx.SaveChanges();
 
-        foreach(Room room in _testGame.Rooms)
+            foreach (Room room in _testGame.Rooms)
             {
                 ctx.Rooms.Add(room);
             }
 
             _testGame.CurrentRoom.Should().Be(16);
             _testGame.Rooms.Count().Should().Be(16);
+        }
+
+        [Fact]
+        public void ShouldMoveRooms()
+        {
+            using var ctx = new Database(_options);
+            ctx.Database.EnsureDeleted();
+            ctx.Database.EnsureCreated();
+
+            _testGame.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
+            _testGame.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
+            ctx.SaveChanges();
+
+            _testGame.Move("west");
+            _testGame.CurrentRoom.Id.Should().Be(15);
 
         }
     }

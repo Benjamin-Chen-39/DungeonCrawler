@@ -30,6 +30,9 @@ namespace lib.Migrations
                     b.Property<int>("Health")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsDead")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 

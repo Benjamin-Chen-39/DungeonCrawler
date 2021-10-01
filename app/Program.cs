@@ -9,8 +9,8 @@ namespace app
         {
             //create and intialize database
             using var db = new Database();
-            
-            var game = new Game(db, 16);
+
+            var game = new Game(db, 3);
 
             game.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
             game.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
@@ -29,40 +29,93 @@ namespace app
             game.AddRoom(15, 0, 0, 16, 14, false, 5, 0);
             game.AddRoom(16, 12, 0, 0, 15, false, 0, 0);
 
-            foreach(Room room in game.Rooms)
+            foreach (Room room in game.Rooms)
             {
                 db.Rooms.Add(room);
             }
 
-            foreach(Monster monster in game.Monsters)
+            foreach (Monster monster in game.Monsters)
             {
                 db.Monsters.Add(monster);
             }
 
-            foreach(Treasure treasure in game.Treasures)
+            foreach (Treasure treasure in game.Treasures)
             {
                 db.Treasures.Add(treasure);
             }
 
+            // db.SaveChanges();
+
             bool validRoomMove = true;
 
-            while (true)
+            Console.WriteLine($"Starting stats:\nHealth: {game.Player.Health}\nAttack: {game.Player.Attack}\nDefense: {game.Player.Defense}");
+            Console.WriteLine("Valid commands: North/South/East/West for movement\nAttack/Open for attacking a monster or opening a treasure");
+            Console.WriteLine("Look to check adjacent rooms\nRest to spend a turn and regain 3 health\nQuit for exiting");
+            Console.WriteLine("Rules: Find the exit before the Minotaur catches you, or battle the fat cow to the death.");
+
+            while (game.IsRunning)
             {
+                //Beginning of a turn
+                if (game.CurrentRoom.isEscapeRoom)
+                {
+                    Console.WriteLine("You found the exit");
+                    break;
+                }
                 if (validRoomMove)
                 {
                     game.viewRoom();
                     validRoomMove = false;
                 }
-                
+
+                Console.WriteLine($"You have {game.TurnLimit} turns left.");
                 Console.WriteLine("Please enter a command.");
                 Console.Write("> ");
 
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().ToLower();
                 //var splitInput = input.Split(" ");
 
-                if (input == "quit") break;
+                switch (input)
+                {
+                    case "quit":
+                        game.IsRunning = false;
+                        break;
+                    case "north":
+                        validRoomMove = game.Move(input);
+                        break;
+                    case "south":
+                        validRoomMove = game.Move(input);
+                        break;
+                    case "east":
+                        validRoomMove = game.Move(input);
+                        break;
+                    case "west":
+                        validRoomMove = game.Move(input);
+                        break;
+                    case "attack":
+                        game.AttackMonster();
+                        break;
+                    case "open":
+                        // game.OpenTreasure();
+                        break;
+                    case "look":
+                        // game.Look();
+                        break;
+                    case "rest":
+                    // game.Rest();
+                    default:
+                        break;
+                }
 
-                validRoomMove = game.Move(input);
+                if (!game.IsRunning)
+                    break;
+
+                //if there's a live monster, it will attack you
+                if (game.CurrentMonster.Id != 0 && !game.CurrentMonster.IsDead)
+                    game.MonsterAttack();
+                //end of turn
+                game.TurnLimit -= 1;
+
+                //Minotaur fight if you didn't find the exit
             }
         }
     }

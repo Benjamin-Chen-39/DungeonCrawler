@@ -8,7 +8,7 @@ using lib;
 namespace lib.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20210930212941_Initial")]
+    [Migration("20211001192800_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,9 @@ namespace lib.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Health")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDead")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
