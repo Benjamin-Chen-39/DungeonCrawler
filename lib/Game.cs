@@ -42,22 +42,40 @@ namespace lib
         public void viewRoom()
         {
             CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
-            Console.WriteLine($"You are in room {this.CurrentRoomId}");
+            Console.Write($"You are in room {this.CurrentRoomId}. ");
             int roomMonster = CurrentRoom.MonsterId;
             if (roomMonster != 0)
             {
                 CurrentMonster = _db.Monsters.Where(monster => monster.Id == roomMonster).First();
-                Console.WriteLine($"You see a {CurrentMonster.Name}");
+                Console.Write($"You see a {CurrentMonster.Name}. ");
             }
             int roomTreasure = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First().TreasureId;
             if (roomTreasure != 0)
             {
                 CurrentTreasure = _db.Treasures.Where(treasure => treasure.Id == roomTreasure).First();
-                Console.WriteLine("You see a treasure");
+                Console.Write("You see a treasure.");
             }
+
+            Console.WriteLine();
+
             CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
 
-
+            if (CurrentRoom.NorthRoomId != 0)
+            {
+                Console.WriteLine("There is a room to the north.");
+            }
+            if (CurrentRoom.SouthRoomId != 0)
+            {
+                Console.WriteLine("There is a room to the south.");
+            }
+            if (CurrentRoom.WestRoomId != 0)
+            {
+                Console.WriteLine("There is a room to the west.");
+            }
+            if (CurrentRoom.EastRoomId != 0)
+            {
+                Console.WriteLine("There is a room to the east.");
+            }
         }
         // //move rooms
         // public void MoveRoom()
@@ -66,5 +84,29 @@ namespace lib
         //sneak
         //acquire treasure
 
+        public bool Move(string direction)
+        {
+            CurrentRoom = _db.Rooms.Where(room => room.Id == this.CurrentRoomId).First();
+
+            switch (direction)
+            {
+                case "north":
+                    if (CurrentRoom.NorthRoomId != 0) { this.CurrentRoomId = CurrentRoom.NorthRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    break;
+                case "south":
+                    if (CurrentRoom.SouthRoomId != 0) { this.CurrentRoomId = CurrentRoom.SouthRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    break;
+                case "east":
+                    if (CurrentRoom.EastRoomId != 0) { this.CurrentRoomId = CurrentRoom.EastRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    break;
+                case "west":
+                    if (CurrentRoom.WestRoomId != 0) { this.CurrentRoomId = CurrentRoom.WestRoomId; return true; } else { Console.WriteLine("You can't move in this direction."); }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        }
     }
 }

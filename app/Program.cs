@@ -10,7 +10,7 @@ namespace app
             //create and intialize database
             using var db = new Database();
             
-            var game = new Game(db, 5);
+            var game = new Game(db, 16);
 
             game.AddRoom(1, 0, 0, 2, 0, true, 0, 0);
             game.AddRoom(2, 0, 0, 3, 1, false, 1, 0);
@@ -44,9 +44,26 @@ namespace app
                 db.Treasures.Add(treasure);
             }
 
-            // db.SaveChanges();
-            game.viewRoom();
+            bool validRoomMove = true;
 
+            while (true)
+            {
+                if (validRoomMove)
+                {
+                    game.viewRoom();
+                    validRoomMove = false;
+                }
+                
+                Console.WriteLine("Please enter a command.");
+                Console.Write("> ");
+
+                var input = Console.ReadLine();
+                //var splitInput = input.Split(" ");
+
+                if (input == "quit") break;
+
+                validRoomMove = game.Move(input);
+            }
         }
     }
 }
